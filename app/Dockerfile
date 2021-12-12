@@ -1,7 +1,9 @@
 FROM node:latest AS storefront
 WORKDIR /usr/src/atsea/app/react-app
-COPY react-app .
+COPY react-app/package.json .
+COPY react-app/package-lock.json .
 RUN npm install
+COPY react-app .
 RUN npm run build
 
 FROM maven:latest AS appserver
