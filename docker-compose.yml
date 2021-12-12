@@ -1,0 +1,51 @@
+version: "3.1"
+
+services:
+  reverse_proxy:
+    image: sisaru/reverse_proxy
+    user: nginx
+
+  database:
+    image: sisaru/database
+    user: postgres
+    environment:
+      POSTGRES_USER: gordonuser
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+      POSTGRES_DB: atsea
+    ports:
+      - "5432:5432"
+    networks:
+      - back-tier
+    secrets:
+      - postgres_password
+
+  appserver:
+    image: sisaru/app
+    user: gordon
+    ports:
+      - "8080:8080"
+      - "5005:5005"
+    networks:
+      - front-tier
+      - back-tier
+    secrets:
+      - postgres_password
+
+  payment_gateway:
+    image: sisaru/payment_gateway
+    networks:
+      - payment
+    secrets:
+      - payment_token
+
+networks:
+  front-tier: null
+  back-tier: null
+  payment:
+    driver: overlay
+
+secrets:
+  postgres_password:
+    file: ./devsecrets/postgres_password
+  payment_token:
+    file: ./devsecrets/payment_token
