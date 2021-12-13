@@ -84,6 +84,7 @@ jobs:
           docker swarm init
           docker stack deploy --compose-file docker-compose.yml atsea
         
+        
     - name: Trigger end to end tests
       run: |
         curl --request POST \
