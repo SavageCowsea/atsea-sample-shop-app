@@ -2,28 +2,28 @@ version: "3.1"
 
 services:
   reverse_proxy:
-    image: sisaru/reverse_proxy
+    image: cloaiza/reverse_proxy
     user: nginx
 
   database:
-    image: sisaru/database
+    image: cloaiza/database
     user: postgres
     environment:
       POSTGRES_USER: gordonuser
       POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
       POSTGRES_DB: atsea
     ports:
-      - "5432:5432"
+      - "5432:5432" 
     networks:
       - back-tier
     secrets:
       - postgres_password
 
   appserver:
-    image: sisaru/app
+    image: cloaiza/app
     user: gordon
     ports:
-      - "8080:8080"
+      - "8080:8080" 
       - "5005:5005"
     networks:
       - front-tier
@@ -32,17 +32,18 @@ services:
       - postgres_password
 
   payment_gateway:
-    image: sisaru/payment_gateway
+    image: cloaiza/payment_gateway
     networks:
       - payment
     secrets:
       - payment_token
 
 networks:
-  front-tier: null
-  back-tier: null
+  front-tier:
+  back-tier:
   payment:
     driver: overlay
+    attachable: true
 
 secrets:
   postgres_password:
