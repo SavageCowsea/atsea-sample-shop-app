@@ -43,6 +43,7 @@ networks:
   back-tier: null
   payment:
     driver: overlay
+    attachable: true
 
 secrets:
   postgres_password:
